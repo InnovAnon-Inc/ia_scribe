@@ -93,20 +93,24 @@ local function run_matrix(itemstack, user, pointed_thing)
     return new_stack
 end
 
---- REGISTRATIONS ---
--- Using ia_gutenberg.register_document ensures these have reader capabilities.
-
 -- ia_scribe/items.lua
--- ... (helper functions and logic remain unchanged)
+-- Industrial replication tools for Gutenberg documents.
+
+-- ... (get_source_stack, run_press, and run_matrix logic remain exactly as before) ...
 
 --- REGISTRATIONS ---
 
 ia_gutenberg.register_document(modname, "carbon_press", {
     title = "Carbon Press",
     description = "Disposable. Consumed to create a standard copy of a book.",
-    -- Visuals following ia_crapht pattern
     icon = "dye_black.png",
-    icon_color = "#000000", -- Black
+    icon_color = "#000000",
+
+    -- Recipe: Basic Tier + Black Dye
+    recipe = ia_gutenberg.get_standard_recipe(1, {
+	    --"dye:black"
+    }),
+
     on_use = function(itemstack, user, pointed_thing)
         return run_press(itemstack, user, pointed_thing, false)
     end,
@@ -116,9 +120,14 @@ ia_gutenberg.register_document(modname, "carbon_press", {
 ia_gutenberg.register_document(modname, "mese_press", {
     title = "Mese-Powered Press",
     description = "Reusable. Imprints the target's text onto itself.",
-    -- Visuals following ia_crapht pattern
     icon = "default_mese_crystal.png",
-    icon_color = "#ffff00", -- Mese Yellow
+    icon_color = "#ffff00",
+
+    -- Recipe: Powered Tier + Mese Crystal
+    recipe = ia_gutenberg.get_standard_recipe(ia_gutenberg.recipe_tiers.POWERED or 3, {
+	    --"default:mese_crystal"
+    }),
+
     on_use = function(itemstack, user, pointed_thing)
         return run_press(itemstack, user, pointed_thing, true)
     end,
@@ -128,9 +137,13 @@ ia_gutenberg.register_document(modname, "mese_press", {
 ia_gutenberg.register_document(modname, "diamond_matrix", {
     title = "Diamond Matrix",
     description = "Clones identity and data. Becomes the target item.",
-    -- Visuals following ia_crapht pattern
     icon = "default_diamond.png",
-    icon_color = "#00ffff", -- Diamond Cyan
+    icon_color = "#00ffff",
+
+    -- Recipe: Industrial/High Tier + Diamond
+    --recipe = ia_gutenberg.get_standard_recipe(3, {"default:diamond"}),
+    recipe = ia_gutenberg.get_standard_recipe(ia_gutenberg.recipe_tiers.POWERED or 3, {"default:diamond"}),
+
     on_use = function(itemstack, user, pointed_thing)
         return run_matrix(itemstack, user, pointed_thing)
     end,
